@@ -2,12 +2,18 @@ package com.moveo.notes;
 
 import android.content.SharedPreferences;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class Info {
     SharedPreferences sp;
+    public String userEmail;
+    public String myID = null;
+    public User currentUser;
+    FirebaseFirestore db;
 
 
-    public Info createInfo() {
-        return null;
+    public Info() {
+         db = FirebaseFirestore.getInstance();
     }
 
     public void StoreEmail(String email){

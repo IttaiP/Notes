@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "22011293528-n3ttfldik3rqt5rgodo591iqtcd2o0cl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moveo.notes",
+            "certificate_hash": "6f614b0c21dda2d93a0b6fe5ee1f1fdb046a705f"
+          }
+        },
+        {
           "client_id": "22011293528-l4mpfjoig2elfss0irohmee5h175vl3n.apps.googleusercontent.com",
           "client_type": 3
         }

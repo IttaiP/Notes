@@ -48,13 +48,17 @@ dependencies {
 
     // Declare the dependencies for any other desired Firebase products
     // For example, declare the dependencies for Firebase Authentication and Cloud Firestore
-    implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
 
     // todo: version is probably redundant, try at some point without version
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
 
     implementation 'io.github.pilgr:paperdb:2.7.1'
+
+    // for google sign in
+    implementation 'com.google.android.gms:play-services-auth:20.0.0'
+
 
 
 }

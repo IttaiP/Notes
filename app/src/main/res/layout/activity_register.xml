@@ -38,20 +38,6 @@
         app:layout_constraintStart_toStartOf="@+id/welcome_title"
         app:layout_constraintTop_toBottomOf="@+id/welcome_title" />
 
-    <EditText
-        android:id="@+id/create_user_person_name_field"
-        android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:ems="10"
-        android:fontFamily="@font/bitter"
-        android:hint="Full Name"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dish_register_title" />
 
     <EditText
         android:id="@+id/create_user_email_address_field"
@@ -59,12 +45,14 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:fontFamily="@font/bitter"
+        android:layout_marginTop="32dp"
         android:hint="Email Address"
         android:inputType="textEmailAddress"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_user_person_name_field" />
+        app:layout_constraintTop_toBottomOf="@+id/dish_register_title"/>
 
     <EditText
         android:id="@+id/create_user_password_field"
@@ -78,6 +66,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_user_email_address_field" />
+
     <Button
         android:id="@+id/create_user_register_button"
         android:layout_width="330dp"
@@ -85,10 +74,11 @@
         android:layout_marginTop="5dp"
         android:text="Register"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_user_password_field"
         tools:ignore="UsingOnClickInXml" />
+
     <TextView
         android:id="@+id/or"
         android:layout_width="wrap_content"
@@ -107,24 +97,23 @@
         android:layout_width="44dp"
         android:layout_height="37dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="60dp"
-        android:layout_marginBottom="122dp"
+
+        android:layout_marginBottom="60dp"
         android:src="@drawable/google_icon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/google_signIn"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/google_signIn" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/google_signIn"
         android:layout_width="259dp"
-        android:layout_height="41dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="118dp"
-        android:hint="sign in with google"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_height="48dp"
+        android:layout_marginBottom="124dp"
+        android:text="sign in with google"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Notes</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="sign_in_with_google">sign in with google</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="first_time_here">First time here?</string>
+    <string name="full_name">Full Name</string>
+    <string name="email_address">Email Address</string>
+    <string name="register">Register</string>
+</resources>

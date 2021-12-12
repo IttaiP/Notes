@@ -29,7 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Arrays;
 import java.util.List;
 
-public class Login extends AppCompatActivity {
+public class Login extends ActivityAncestor {
     NotesApp app;
     private FirebaseAuth auth;
     private FirebaseFirestore firebaseFirestore;
@@ -42,6 +42,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         app = (NotesApp) getApplication();
+        centerTitle();
 
         String loggedIn = app.info.getLoggedIn();
         if(!loggedIn.equals("")){

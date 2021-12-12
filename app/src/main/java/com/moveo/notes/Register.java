@@ -25,7 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
-public class Register extends AppCompatActivity {
+public class Register extends ActivityAncestor {
     NotesApp app;
     private EditText editTextEmail, editTextPassword;
     private Button registerButton;
@@ -44,6 +44,7 @@ public class Register extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseAuth.getInstance().signOut();
         app = (NotesApp) getApplication();
+        centerTitle();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser == null){

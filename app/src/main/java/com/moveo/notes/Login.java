@@ -43,7 +43,13 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         app = (NotesApp) getApplication();
 
-        //todo: add check whether user is already logged in
+        String loggedIn = app.info.getLoggedIn();
+        if(!loggedIn.equals("")){
+            app.info.currentUser = new User(loggedIn, "");
+            Intent intent = new Intent(this, MainScreen.class);
+            startActivity(intent);
+        }
+
 
         email = findViewById(R.id.welcome_screen_EmailAddress_field);
         password = findViewById(R.id.welcome_screen_password_field);
@@ -91,37 +97,8 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
-
         register = findViewById(R.id.welcome_screen_register);
         register.setOnClickListener(view -> onClickHandle(register));
-
-
-
-
-
-//
-//
-//        // Choose authentication providers
-//        List<AuthUI.IdpConfig> providers = Arrays.asList(
-//                new AuthUI.IdpConfig.EmailBuilder().build(),
-//                new AuthUI.IdpConfig.GoogleBuilder().build());
-//
-//// Create and launch sign-in intent
-//        Intent signInIntent = AuthUI.getInstance()
-//                .createSignInIntentBuilder()
-//                .setAvailableProviders(providers)
-//                .build();
-//        signInLauncher.launch(signInIntent);
-//
-//
-//        AuthUI.getInstance()
-//                .signOut(this)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        // ...
-//                    }
-//                });
 
     }
 
@@ -177,6 +154,7 @@ public class Login extends AppCompatActivity {
                                 }
                                 else {
                                     // todo: add extra stuff before going to main page
+                                    app.info.RemmemberLogIn(email.getText().toString());
                                     startActivity(intent);
                                 }
                             }
@@ -205,6 +183,7 @@ public class Login extends AppCompatActivity {
                                 else {
                                     app.info.currentUser = new User(email.getText().toString(), "");
                                     app.info.currentUser.SetID(task.getResult().getDocuments().get(0).getId());
+                                    app.info.RemmemberLogIn(email.getText().toString());
                                     startActivity(intent);
                                 }
                             }

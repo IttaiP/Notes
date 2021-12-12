@@ -187,6 +187,7 @@ public class Register extends AppCompatActivity {
             if (googleUser != null) {
                 String userEmail = googleUser.getEmail();
                 user = new User(userEmail, "");
+
             }
         }
 
@@ -223,6 +224,8 @@ public class Register extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     }});
         Intent intent = new Intent(this, MainScreen.class); //
+        app.info.RemmemberLogIn(user.email);
+
         startActivity(intent); //
     }
     // =============================================================================================

@@ -10,6 +10,6 @@ public class NotesApp extends Application {
     public void onCreate() {
         super.onCreate();
         Paper.init(this);
-        info = new Info();
+        info = new Info(this);
     }
 }

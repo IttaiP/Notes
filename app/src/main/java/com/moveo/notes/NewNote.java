@@ -16,19 +16,32 @@ import android.widget.TextView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.sql.Time;
 import java.util.Date;
 
 public class NewNote extends ActivityAncestor {
     Button save,delete;
     EditText title, body;
     TextView date;
+    Date currentDate = new Date();
+    final Timestamp[] currentTimestamp = {new Timestamp(currentDate)};
+
+    int index;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_note);
+
+        Intent intent = getIntent();
+        String id = intent.getExtras().getString("id","___");
+        if(!id.equals("___")){
+            readNoteFromFirestore(id);
+            index = intent.getExtras().getInt("index");
+        }
 
         title = findViewById(R.id.title);
         body = findViewById(R.id.body);
@@ -39,8 +52,7 @@ public class NewNote extends ActivityAncestor {
         final boolean[] titleSet = {false};
         final boolean[] bodySet = {false};
 
-        Date currentDate = new Date();
-        final Timestamp[] currentTimestamp = {new Timestamp(currentDate)};
+
         date.setText("Date: "+currentDate.getDate()+"."+currentDate.getMonth()+"           to change, press here.");
 
         centerTitle();
@@ -66,15 +78,27 @@ public class NewNote extends ActivityAncestor {
         });
 
         save.setOnClickListener(view -> {
-            Note newNote = new Note("___", title.getText().toString(), body.getText().toString(),
-                    currentTimestamp[0],null);// todo: add location
-            app.info.addNoteToDB(newNote);
-            app.info.noteList.add(newNote);
-            startActivity(new Intent(NewNote.this, MainScreen.class));
-            finish();
+            if(id.equals("___")) {
+                Note newNote = new Note(id, title.getText().toString(), body.getText().toString(),
+                        currentTimestamp[0], null);// todo: add location
+                app.info.addNoteToDB(newNote);
+                app.info.noteList.add(newNote);
+                startActivity(new Intent(NewNote.this, MainScreen.class));
+                finish();
+            }
+            else{
+                app.info.noteList.get(index).title = title.getText().toString();
+                app.info.noteList.get(index).body = body.getText().toString();
+                app.info.noteList.get(index).date = currentTimestamp[0];
+                app.info.updateNoteInDB(app.info.noteList.get(index));
+                startActivity(new Intent(NewNote.this, MainScreen.class));
+                finish();
+
+            }
         });
 
         delete.setOnClickListener(view -> {
+
             startActivity(new Intent(this, MainScreen.class));
             finish();
         });
@@ -108,5 +132,33 @@ public class NewNote extends ActivityAncestor {
         });
 
 
+    }
+
+    private void readNoteFromFirestore(String id){
+        app.info.db.collection("users")
+                .document(app.info.currentUser.id)
+                .collection("notes")
+                .document(id)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        title.setText(document.getString("title"));
+                        body.setText(document.getString("body"));
+                        currentTimestamp[0] = document.getTimestamp("date");
+                        Date oldDate = currentTimestamp[0].toDate();
+                        date.setText("Date: "+oldDate.getDate()+"."+oldDate.getMonth()+"           to change, press here.");
+
+//                        Gson gson = new Gson();
+//                        String ratingsAsJson = gson.toJson(info.ratings);
+//                        Paper.book(info.getUserEmail()).write("ratings", info.ratings);
+//                        info.sp.edit().putString("ratings", ratingsAsJson).apply();
+//                        String iRatingsAsJson = gson.toJson(info.indicesInRatings);
+//                        Paper.book(info.getUserEmail()).write("iRatings", info.indicesInRatings);
+//                        info.sp.edit().putString("iRatings", iRatingsAsJson).apply();
+                    } else {
+                        Log.e("ERRRORRR", "Error getting documents: ", task.getException());
+                    }
+                });
     }
 }

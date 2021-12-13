@@ -116,5 +116,26 @@ public class Info {
                 });
     }
 
+    public void updateNoteInDB(Note newNote){
+        String id = newNote.id;
+        newNote.setId(id);
+        db.collection("users").document(this.currentUser.id).collection("notes").document(id)
+                .set(newNote)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("WRITE SUCCES", "DocumentSnapshot successfully written!");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("WRITE FAILURE", "Error writing document", e);
+
+                    }
+                });
+    }
+
 
 }

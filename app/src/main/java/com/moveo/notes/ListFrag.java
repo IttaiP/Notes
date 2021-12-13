@@ -4,6 +4,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 
@@ -72,7 +73,12 @@ public class ListFrag extends Fragment {
                     @Override
                     public void onItemClick(Note item) {
                         Toast.makeText(getContext(), "Item Clicked"+item.title, Toast.LENGTH_LONG).show();
-                        // todo: add click behaviour
+                        Intent intent = new Intent(getActivity(), NewNote.class);
+                        intent.putExtra("id", item.id);
+                        intent.putExtra("index",app.info.noteList.indexOf(item));
+                        startActivity(intent);
+                        getActivity().finish(); // todo: check if works
+
                     }
                 });
         bi.myList.setLayoutManager(new LinearLayoutManager(getActivity()));

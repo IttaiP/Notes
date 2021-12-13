@@ -48,9 +48,6 @@ public class Login extends ActivityAncestor {
             String password = app.info.sp.getString("password", "__");
             if(!password.equals("__")){
                 findUserInFirestore(loggedIn, app.info.sp.getString("password", "__"));
-                Intent intent = new Intent(this, MainScreen.class);
-                startActivity(intent);
-                finish();
             }
         }
 

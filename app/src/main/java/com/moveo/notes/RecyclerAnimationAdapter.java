@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Comparator;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -24,7 +25,15 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
     public RecyclerAnimationAdapter(Context context, List<Note> noteList) {
 
         this.context = context;
+        if(noteList.size()>1)
+        noteList.sort(new Comparator<Note>() {
+            @Override
+            public int compare(Note note, Note t1) {
+                return note.date.compareTo(t1.date);
+            }
+        });
         this.list = noteList;
+
     }
 
     @NonNull

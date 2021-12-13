@@ -12,7 +12,7 @@ public class Note {
     public int image;
     public double latitude;
     public double longitude;
-    Timestamp date;
+    public Timestamp date;
 
     public Note(String id, String title, String body, Timestamp date, GeoPoint location){
         this.id = id;

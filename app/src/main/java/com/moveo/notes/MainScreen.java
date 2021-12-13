@@ -44,7 +44,7 @@ public class MainScreen extends ActivityAncestor {
         setContentView(R.layout.activity_main_screen);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         logOut = findViewById(R.id.logout);
-        newNote = findViewById(R.id.new_note)
+        newNote = findViewById(R.id.new_note);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
@@ -53,24 +53,18 @@ public class MainScreen extends ActivityAncestor {
 
 
 
-        Intent intent = new Intent(this, Login.class);
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                app.info.LogOut();
-                startActivity(intent);
-                finish();
-            }
+        Intent logoutIntent = new Intent(this, Login.class);
+        logOut.setOnClickListener(view -> {
+            app.info.LogOut();
+            startActivity(logoutIntent);
+            finish();
         });
 
-        Intent intent = new Intent(this, Login.class);
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                app.info.LogOut();
-                startActivity(intent);
-                finish();
-            }
+        Intent newNoteIntent = new Intent(this, NewNote.class);
+        newNote.setOnClickListener(view -> {
+            app.info.LogOut();
+            startActivity(newNoteIntent);
+            finish();
         });
     }
 

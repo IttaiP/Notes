@@ -95,5 +95,26 @@ public class Info {
         return sp.getString("logged_in", "");
     }
 
+    public void addNoteToDB(Note newNote){
+        String id = db.collection("collection_name").document().getId();
+        newNote.setId(id);
+        db.collection("users").document(this.currentUser.id).collection("notes").document(id)
+                .set(newNote)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("WRITE SUCCES", "DocumentSnapshot successfully written!");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("WRITE FAILURE", "Error writing document", e);
+
+                    }
+                });
+    }
+
 
 }

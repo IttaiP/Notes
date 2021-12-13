@@ -210,7 +210,7 @@ public class Login extends ActivityAncestor {
 
                     // found user with provided email
                     if (task.isSuccessful() && !task.getResult().getDocuments().isEmpty()){
-                        app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
+//                        app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
                         Intent intent = new Intent(this, MainScreen.class);
                         List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
                         if (documentSnapshotList.isEmpty()){

@@ -19,14 +19,18 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class NewNote extends ActivityAncestor {
     Button save,delete;
     EditText title, body;
     TextView date;
-    Date currentDate = new Date();
-    final Timestamp[] currentTimestamp = {new Timestamp(currentDate)};
+    Calendar currentDate = Calendar.getInstance();
+//    Date currentDate = new Date();
+    final Timestamp[] currentTimestamp = {new Timestamp(new Date())};
 
     int index;
 
@@ -58,8 +62,12 @@ public class NewNote extends ActivityAncestor {
         final boolean[] titleSet = {false};
         final boolean[] bodySet = {false};
 
+        Log.e("Month", String.valueOf(currentDate.get(Calendar.MONTH)));
+        Log.e("FULL DATE", String.valueOf(currentDate.get(Calendar.DATE)));
 
-        date.setText("Date: "+currentDate.getDate()+"."+currentDate.getMonth()+"           to change, press here.");
+
+
+        date.setText("Date: "+currentDate.get(Calendar.DAY_OF_MONTH)+"."+(currentDate.get(Calendar.MONTH)+1)+"           to change, press here.");
 
         centerTitle();
         date.setOnClickListener(new View.OnClickListener() {
@@ -72,10 +80,12 @@ public class NewNote extends ActivityAncestor {
                 picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
                     @Override
                     public void onPositiveButtonClick(Long selection) {
-                        Log.e("picker", String.valueOf(picker.getSelection()));
-                        Date newDate = new Date(picker.getSelection());
-                        currentTimestamp[0] = new Timestamp(newDate);
-                        date.setText("Date: "+newDate.getDate()+"."+newDate.getMonth()+"         to change, press here.");
+//                        Log.e("picker", String.valueOf(picker.getSelection()));
+//                        Date newDate = new Date(picker.getSelection());
+                        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                        calendar.setTimeInMillis(selection);
+//                        currentTimestamp[0] = new Timestamp(newDate);
+                        date.setText("Date: "+calendar.get(Calendar.DAY_OF_MONTH)+"."+(calendar.get(Calendar.MONTH)+1)+"         to change, press here.");
 
                     }
                 });
@@ -158,7 +168,9 @@ public class NewNote extends ActivityAncestor {
                         body.setText(document.getString("body"));
                         currentTimestamp[0] = document.getTimestamp("date");
                         Date oldDate = currentTimestamp[0].toDate();
-                        date.setText("Date: "+oldDate.getDate()+"."+oldDate.getMonth()+"           to change, press here.");
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(oldDate);
+                        date.setText("Date: "+calendar.get(Calendar.DAY_OF_MONTH)+"."+(currentDate.get(Calendar.MONTH)+1)+"           to change, press here.");
 
 //                        Gson gson = new Gson();
 //                        String ratingsAsJson = gson.toJson(info.ratings);

@@ -223,7 +223,8 @@ public class Register extends ActivityAncestor {
         Intent intent = new Intent(this, MainScreen.class); //
         app.info.RemmemberLogIn(user.email);
 
-        startActivity(intent); //
+        startActivity(intent);
+        finish();
     }
     // =============================================================================================
 

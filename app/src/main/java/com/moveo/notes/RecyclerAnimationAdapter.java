@@ -20,14 +20,16 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
 
 
     Context context;
-    List<Note> list;
+    List<Note> notesList;
+    private final OnItemClickListener listener;
 
-    public RecyclerAnimationAdapter(Context context, List<Note> noteList) {
 
+    public RecyclerAnimationAdapter(Context context, List<Note> noteList, OnItemClickListener listener) {
+        this.listener = listener;
         this.context = context;
         if(noteList.size()>1)
         noteList.sort((note, t1) -> note.date.compareTo(t1.date));
-        this.list = noteList;
+        this.notesList = noteList;
 
     }
 
@@ -42,16 +44,23 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
 
-        holder.name.setText(list.get(i).title);
-        holder.description.setText(list.get(i).body);
+        holder.name.setText(notesList.get(i).title);
+        holder.description.setText(notesList.get(i).body);
+        holder.bind(notesList.get(i), listener);
 
 //        Picasso.get().load(list.get(i).image).into(holder.imageView);
 
     }
 
+
+
     @Override
     public int getItemCount() {
-        return list.size();
+        return notesList.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Note item);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -69,6 +78,14 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
             description = itemView.findViewById(R.id.desc);
 
             parentLayout = itemView.findViewById(R.id.parentLayout);
+        }
+
+        public void bind(final Note item, final OnItemClickListener listener){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
         }
     }
 }

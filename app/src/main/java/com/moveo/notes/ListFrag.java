@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.moveo.notes.databinding.ActivityMainBinding;
 import com.moveo.notes.databinding.ListFragmentBinding;
@@ -66,7 +67,14 @@ public class ListFrag extends Fragment {
     }
 
     public void initRecyclerView(){
-        adapter = new RecyclerAnimationAdapter(getActivity(), notesList);
+        adapter = new RecyclerAnimationAdapter(getActivity(), notesList,
+                new RecyclerAnimationAdapter.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(Note item) {
+                        Toast.makeText(getContext(), "Item Clicked"+item.title, Toast.LENGTH_LONG).show();
+                        // todo: add click behaviour
+                    }
+                });
         bi.myList.setLayoutManager(new LinearLayoutManager(getActivity()));
         bi.myList.setAdapter(adapter);
     }

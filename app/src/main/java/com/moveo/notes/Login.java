@@ -135,7 +135,7 @@ public class Login extends ActivityAncestor {
             case R.id.welcome_screen_register:
                 Intent RegisterIntent = new Intent(Login.this, Register.class);
                 startActivity(RegisterIntent);
-                break;
+                finish();
 
             // exist user
             case R.id.welcome_screen_sign_in_button:
@@ -218,6 +218,7 @@ public class Login extends ActivityAncestor {
                             app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
                             app.info.RemmemberLogIn(email);
                             startActivity(intent);
+                            finish();
                         }
                     }
 

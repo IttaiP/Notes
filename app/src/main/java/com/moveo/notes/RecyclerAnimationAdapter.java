@@ -39,7 +39,7 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
 
         holder.name.setText(list.get(i).title);
-        Picasso.get().load(list.get(i).image).into(holder.imageView);
+//        Picasso.get().load(list.get(i).image).into(holder.imageView);
 
     }
 

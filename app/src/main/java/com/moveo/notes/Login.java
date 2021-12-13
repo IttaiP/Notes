@@ -218,7 +218,7 @@ public class Login extends ActivityAncestor {
                         }
                         else {
                             // todo: add extra stuff before going to main page
-                            app.info.setUser(new User(email, ""), task.getResult().getDocuments().get(0).getId());
+                            app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
                             app.info.RemmemberLogIn(email);
                             startActivity(intent);
                         }

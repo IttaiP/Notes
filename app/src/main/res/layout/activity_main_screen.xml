@@ -51,7 +51,7 @@
         android:layout_marginBottom="630dp"
         android:fontFamily="@font/bitter"
         android:gravity="center"
-        android:text="It Aint Gonna Happen"
+        android:text=" It Aint Gonna Happen"
         android:textColor="@color/black"
         android:textSize="11sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -75,17 +75,28 @@
 
         </FrameLayout>
 
+
+        <!--        <FrameLayout-->
+<!--            android:id="@+id/buttons_frame"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_below="@id/notes2_photo"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            android:background="@color/bronze">-->
+
+
+<!--        </FrameLayout>-->
+
         <ImageView
             android:id="@+id/notes2_photo"
             android:layout_width="match_parent"
-            android:layout_height="86dp"
+            android:layout_height="136dp"
             android:scaleType="centerCrop"
             android:src="@drawable/notes2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
-
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
@@ -104,14 +115,25 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/logout"
-        android:layout_height="wrap_content"
+        android:id="@+id/new_note"
         android:layout_width="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:text="New Note"
+        android:layout_marginTop="-16sp"
+
+        app:layout_constraintTop_toBottomOf="@+id/textView1"
+        app:layout_constraintEnd_toEndOf="@+id/textView1" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Log Out"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginTop="-16sp"
+        android:layout_marginLeft="8sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView1"
+
+        app:layout_constraintStart_toStartOf="@+id/textView2"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

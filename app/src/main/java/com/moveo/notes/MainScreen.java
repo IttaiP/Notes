@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.moveo.notes.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,11 @@ public class MainScreen extends ActivityAncestor {
     boolean MAP = true;
     boolean LIST = false;
     boolean lastPressed = MAP;
-    Button logOut;
+    Button logOut, newNote;
+
+
+
+
 
 
 
@@ -36,12 +44,24 @@ public class MainScreen extends ActivityAncestor {
         setContentView(R.layout.activity_main_screen);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         logOut = findViewById(R.id.logout);
+        newNote = findViewById(R.id.new_note)
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
 
         centerTitle();
 
+
+
+        Intent intent = new Intent(this, Login.class);
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                app.info.LogOut();
+                startActivity(intent);
+                finish();
+            }
+        });
 
         Intent intent = new Intent(this, Login.class);
         logOut.setOnClickListener(new View.OnClickListener() {
@@ -105,4 +125,6 @@ public class MainScreen extends ActivityAncestor {
 
 
     };
+
+
 }

@@ -20,6 +20,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.paperdb.Paper;
+
 public class Info {
     SharedPreferences sp;
     public String userEmail;
@@ -43,44 +45,33 @@ public class Info {
     }
 
     public void loadNotesFromFirestore(){
-//        ArrayList<String> arrayList = new ArrayList<>();
-//        db.collection("users").whereEqualTo("User email", user.getEmail())
-//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if(task.isSuccessful() && !task.getResult().isEmpty()) {
-//                    DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-//                    String documentId = documentSnapshot.getId();
-//                    db.collection("notite").document(documentId).get()
-//                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                                @Override
-//                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                    if(documentSnapshot.exists()) {
-//                                        String notita = documentSnapshot.getString("Detalii");
-//                                        arrayList.add(notita);
-//                                        ArrayAdapter arrayAdapter = new ArrayAdapter<>(appContext, android.R.layout.simple_list_item_1,
-//                                                arrayList);
-//                                        listView.setAdapter(arrayAdapter);
-//                                    } else {
-//                                        Toast.makeText(getContext(), "Notes does not exist",
-//                                                Toast.LENGTH_LONG).show();
-//                                    }
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(appContext, "Failure retrieving",
-//                                    Toast.LENGTH_LONG).show();
-//                            Log.d("Retrieve", e.toString());
-//                        }
-//                    });
-//
-//                } else {
-//                    Toast.makeText(appContext, "Does not exist"
-//                            , Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
+       noteList = new ArrayList<>();
+        db.collection("users")
+                .document(this.currentUser.id)
+                .collection("notes")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                            Log.e("DOCUMENTTT", document.getId() + " => " + document.getData());
+                            Note newNote = new Note(document.getId(), document.getString("title"), document.getString("body"), document.getTimestamp("date"), document.getGeoPoint("location"));
+                            noteList.add(newNote);
+                            Log.d("ID IS ", document.getId());
+                            Log.d("TITLE IS ", document.getString("title"));
+
+                        }
+//                        Gson gson = new Gson();
+//                        String ratingsAsJson = gson.toJson(info.ratings);
+//                        Paper.book(info.getUserEmail()).write("ratings", info.ratings);
+//                        info.sp.edit().putString("ratings", ratingsAsJson).apply();
+//                        String iRatingsAsJson = gson.toJson(info.indicesInRatings);
+//                        Paper.book(info.getUserEmail()).write("iRatings", info.indicesInRatings);
+//                        info.sp.edit().putString("iRatings", iRatingsAsJson).apply();
+                    } else {
+                        Log.e("ERRRORRR", "Error getting documents: ", task.getException());
+                    }
+                });
     }
 
     public void StoreEmail(String email){

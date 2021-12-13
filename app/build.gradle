@@ -28,11 +28,12 @@ android {
     }
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
     // for recycler view design
-    dataBinding{
-        enabled true
-    }
+//    dataBinding{
+//        enabled true
+//    }
 }
 
 dependencies {
@@ -80,7 +81,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
     //RecyclerView
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
 
     //circularImageView Library for showing images in circles
     implementation 'de.hdodenhof:circleimageview:3.0.0'

@@ -99,6 +99,19 @@
             app:menu="@menu/bottom_menu" />
 
 
+
+
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="Log Out"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

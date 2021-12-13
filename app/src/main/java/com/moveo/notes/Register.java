@@ -194,8 +194,7 @@ public class Register extends ActivityAncestor {
             user = new User(editTextEmail.getText().toString().trim(), editTextPassword.getText().toString().trim());
         }
 //        user.SetID(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        app.info.currentUser = user;
-        app.info.currentUser.SetID(FirebaseAuth.getInstance().getCurrentUser().getUid());  // wont be null because in case of new user we called "createUserWithEmailAndPassword"
+        app.info.setUser(user,FirebaseAuth.getInstance().getCurrentUser().getUid() );  // wont be null because in case of new user we called "createUserWithEmailAndPassword"
 
 
         app.info.db.collection("users").
@@ -207,7 +206,6 @@ public class Register extends ActivityAncestor {
                         Toast.makeText(this,
                                 "User has been registered successfully!",
                                 Toast.LENGTH_LONG).show();
-                        app.info.currentUser.SetID(FirebaseAuth.getInstance().getCurrentUser().getUid());
                     } else {
                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                         firebaseUser.delete()

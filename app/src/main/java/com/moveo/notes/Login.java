@@ -42,11 +42,16 @@ public class Login extends ActivityAncestor {
         setContentView(R.layout.activity_main);
         centerTitle();
 
+        // check if user already logged in
         String loggedIn = app.info.getLoggedIn();
         if(!loggedIn.equals("")){
-            app.info.currentUser = new User(loggedIn, "");
-            Intent intent = new Intent(this, MainScreen.class);
-            startActivity(intent);
+            String password = app.info.sp.getString("password", "__");
+            if(!password.equals("__")){
+                findUserInFirestore(loggedIn, app.info.sp.getString("password", "__"));
+                Intent intent = new Intent(this, MainScreen.class);
+                startActivity(intent);
+                finish();
+            }
         }
 
 
@@ -137,63 +142,93 @@ public class Login extends ActivityAncestor {
 
             // exist user
             case R.id.welcome_screen_sign_in_button:
-                app.info.db.collection("users")
-                        .whereEqualTo("email", email.getText().toString())
-                        .whereEqualTo("password", password.getText().toString()).get()
-                        .addOnCompleteListener(task -> {
-
-                            // found user with provided email
-                            if (task.isSuccessful() && !task.getResult().getDocuments().isEmpty()){
-                                app.info.currentUser = new User(email.getText().toString(), password.getText().toString());
-                                app.info.currentUser.SetID(task.getResult().getDocuments().get(0).getId());
-                                Intent intent = new Intent(this, MainScreen.class);
-                                List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
-                                if (documentSnapshotList.isEmpty()){
-                                    Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    // todo: add extra stuff before going to main page
-                                    app.info.RemmemberLogIn(email.getText().toString());
-                                    startActivity(intent);
-                                }
-                            }
-
-                            //user was not found
-                            else {
-                                Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                findUserInFirestore(email.getText().toString(), password.getText().toString());
+//
+//                app.info.db.collection("users")
+//                        .whereEqualTo("email", email.getText().toString())
+//                        .whereEqualTo("password", password.getText().toString()).get()
+//                        .addOnCompleteListener(task -> {
+//
+//                            // found user with provided email
+//                            if (task.isSuccessful() && !task.getResult().getDocuments().isEmpty()){
+//                                app.info.setUser(new User(email.getText().toString(), password.getText().toString()), task.getResult().getDocuments().get(0).getId());
+//                                Intent intent = new Intent(this, MainScreen.class);
+//                                List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
+//                                if (documentSnapshotList.isEmpty()){
+//                                    Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
+//                                }
+//                                else {
+//                                    // todo: add extra stuff before going to main page
+//                                    app.info.setUser(new User(email.getText().toString(), ""), task.getResult().getDocuments().get(0).getId()));
+//                                    app.info.RemmemberLogIn(email.getText().toString());
+//                                    startActivity(intent);
+//                                }
+//                            }
+//
+//                            //user was not found
+//                            else {
+//                                Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
                 break;
 
             case R.id.sign_in_with_google:
-                app.info.db.collection("users")
-                        .whereEqualTo("email", email.getText().toString()).get()
-                        .addOnCompleteListener(task -> {
+                findUserInFirestore(email.getText().toString(), "");
 
-                            // found user with provided email
-                            if (task.isSuccessful()){
-
-                                Intent intent = new Intent(this, MainScreen.class);
-                                List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
-
-                                if (documentSnapshotList.isEmpty()){
-                                    Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    app.info.currentUser = new User(email.getText().toString(), "");
-                                    app.info.currentUser.SetID(task.getResult().getDocuments().get(0).getId());
-                                    app.info.RemmemberLogIn(email.getText().toString());
-                                    startActivity(intent);
-                                }
-                            }
-
-                            //user was not found
-                            else {
-                                Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+//                app.info.db.collection("users")
+//                        .whereEqualTo("email", email.getText().toString()).get()
+//                        .addOnCompleteListener(task -> {
+//                            // found user with provided email
+//                            if (task.isSuccessful()){
+//                                Intent intent = new Intent(this, MainScreen.class);
+//                                List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
+//                                if (documentSnapshotList.isEmpty()){
+//                                    Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
+//                                }
+//                                else {
+//                                    app.info.setUser(new User(email.getText().toString(), ""), task.getResult().getDocuments().get(0).getId()));
+//                                    app.info.RemmemberLogIn(email.getText().toString());
+//                                    startActivity(intent);
+//                                }
+//                            }
+//
+//                            //user was not found
+//                            else {
+//                                Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
                 break;
 
         }
+    }
+
+    private void findUserInFirestore(String email, String password){
+        app.info.db.collection("users")
+                .whereEqualTo("email", email)
+                .whereEqualTo("password", password).get()
+                .addOnCompleteListener(task -> {
+
+                    // found user with provided email
+                    if (task.isSuccessful() && !task.getResult().getDocuments().isEmpty()){
+                        app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
+                        Intent intent = new Intent(this, MainScreen.class);
+                        List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
+                        if (documentSnapshotList.isEmpty()){
+                            Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            // todo: add extra stuff before going to main page
+                            app.info.setUser(new User(email, ""), task.getResult().getDocuments().get(0).getId());
+                            app.info.RemmemberLogIn(email);
+                            startActivity(intent);
+                        }
+                    }
+
+                    //user was not found
+                    else {
+                        Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 }

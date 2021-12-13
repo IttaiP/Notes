@@ -6,39 +6,54 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainScreen extends ActivityAncestor {
     boolean MAP = true;
     boolean LIST = false;
     boolean lastPressed = MAP;
+    Button logOut;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
-
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-
+        logOut = findViewById(R.id.logout);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
 
         centerTitle();
 
+
+        Intent intent = new Intent(this, Login.class);
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                app.info.LogOut();
+                startActivity(intent);
+                finish();
+            }
+        });
     }
+
 
 
 

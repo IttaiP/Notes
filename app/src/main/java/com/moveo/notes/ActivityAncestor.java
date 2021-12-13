@@ -11,11 +11,15 @@ import android.widget.Toolbar;
 import java.util.ArrayList;
 
 public class ActivityAncestor extends AppCompatActivity {
+    NotesApp app;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ancestor);
+        app = (NotesApp) getApplication();
+
     }
 
     protected void centerTitle() {

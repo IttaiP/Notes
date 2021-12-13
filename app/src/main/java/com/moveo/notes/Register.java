@@ -26,7 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class Register extends ActivityAncestor {
-    NotesApp app;
     private EditText editTextEmail, editTextPassword;
     private Button registerButton;
     private Button signUpWithGoogleButton;
@@ -43,7 +42,6 @@ public class Register extends ActivityAncestor {
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
         FirebaseAuth.getInstance().signOut();
-        app = (NotesApp) getApplication();
         centerTitle();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();

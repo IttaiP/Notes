@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Login extends ActivityAncestor {
-    NotesApp app;
     private FirebaseAuth auth;
     private FirebaseFirestore firebaseFirestore;
     private EditText email, password;
@@ -41,7 +40,6 @@ public class Login extends ActivityAncestor {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        app = (NotesApp) getApplication();
         centerTitle();
 
         String loggedIn = app.info.getLoggedIn();

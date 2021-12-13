@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,12 +25,11 @@ import io.paperdb.Paper;
 
 public class Info {
     SharedPreferences sp;
-    public String userEmail;
-    public String myID = null;
     public User currentUser;
     FirebaseFirestore db;
     List<Note> noteList;
     Context appContext;
+    private MutableLiveData<Integer> listLength;
 
 
     public Info(Context context) {
@@ -42,6 +42,13 @@ public class Info {
         this.currentUser = user;
         this.currentUser.SetID(id);
         loadNotesFromFirestore();
+    }
+
+    public MutableLiveData<Integer> getUpdatedList() {
+        if (listLength == null) {
+            listLength = new MutableLiveData<Integer>();
+        }
+        return listLength;
     }
 
     public void loadNotesFromFirestore(){
@@ -57,6 +64,8 @@ public class Info {
                             Log.e("DOCUMENTTT", document.getId() + " => " + document.getData());
                             Note newNote = new Note(document.getId(), document.getString("title"), document.getString("body"), document.getTimestamp("date"), document.getGeoPoint("location"));
                             noteList.add(newNote);
+                            getUpdatedList().setValue(noteList.size());
+
                             Log.d("ID IS ", document.getId());
                             Log.d("TITLE IS ", document.getString("title"));
 
@@ -89,6 +98,8 @@ public class Info {
 
     public void LogOut(){
         sp.edit().remove("logged_in").apply();
+        this.noteList.clear();
+        this.getUpdatedList().setValue(0);
     }
 
     public String getLoggedIn(){
@@ -100,6 +111,27 @@ public class Info {
         newNote.setId(id);
         db.collection("users").document(this.currentUser.id).collection("notes").document(id)
                 .set(newNote)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("WRITE SUCCES", "DocumentSnapshot successfully written!");
+                        getUpdatedList().setValue(noteList.size());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("WRITE FAILURE", "Error writing document", e);
+
+                    }
+                });
+    }
+
+    public void updateNoteInDB(Note noteToUpdate){
+        String id = noteToUpdate.id;
+        db.collection("users").document(this.currentUser.id)
+                .collection("notes").document(id)
+                .set(noteToUpdate)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -116,23 +148,23 @@ public class Info {
                 });
     }
 
-    public void updateNoteInDB(Note newNote){
-        String id = newNote.id;
-        newNote.setId(id);
-        db.collection("users").document(this.currentUser.id).collection("notes").document(id)
-                .set(newNote)
+    public void deleteNoteFromDB(Note noteToDelete){
+        String id = noteToDelete.id;
+        db.collection("users").document(this.currentUser.id)
+        .collection("notes").document(id)
+                .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("WRITE SUCCES", "DocumentSnapshot successfully written!");
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(appContext, "Note was deleted", Toast.LENGTH_SHORT).show();
+                        getUpdatedList().setValue(noteList.size());
 
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("WRITE FAILURE", "Error writing document", e);
-
+                        Toast.makeText(appContext, "Error deleting note", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

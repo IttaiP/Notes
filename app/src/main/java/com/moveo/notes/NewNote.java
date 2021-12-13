@@ -37,7 +37,13 @@ public class NewNote extends ActivityAncestor {
         setContentView(R.layout.activity_new_note);
 
         Intent intent = getIntent();
-        String id = intent.getExtras().getString("id","___");
+        String id;
+        if(intent.getExtras()!= null){
+            id = intent.getExtras().getString("id","___");
+        }
+        else{
+            id = "___";
+        }
         if(!id.equals("___")){
             readNoteFromFirestore(id);
             index = intent.getExtras().getInt("index");
@@ -87,6 +93,7 @@ public class NewNote extends ActivityAncestor {
                 finish();
             }
             else{
+                // todo: update with new location
                 app.info.noteList.get(index).title = title.getText().toString();
                 app.info.noteList.get(index).body = body.getText().toString();
                 app.info.noteList.get(index).date = currentTimestamp[0];
@@ -98,7 +105,11 @@ public class NewNote extends ActivityAncestor {
         });
 
         delete.setOnClickListener(view -> {
-
+            if(!id.equals("___")) {
+                Note tempNote = app.info.noteList.get(index);
+                app.info.noteList.remove(index);
+                app.info.deleteNoteFromDB(tempNote);
+            }
             startActivity(new Intent(this, MainScreen.class));
             finish();
         });

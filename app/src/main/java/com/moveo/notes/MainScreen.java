@@ -1,16 +1,19 @@
 package com.moveo.notes;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -47,9 +50,31 @@ public class MainScreen extends ActivityAncestor {
         newNote = findViewById(R.id.new_note);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
+        Log.e("EMPTY", String.valueOf(app.info.noteList.isEmpty()));
+        if(!app.info.noteList.isEmpty()){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
+        }
+        else{
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NoNotesFragment()).commit();
+        }
 
         centerTitle();
+
+        final Observer<Integer> lengthObserver = new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable final Integer newUpdatedListLength) {
+                if(newUpdatedListLength>0){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
+                }
+                else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NoNotesFragment()).commit();
+                }
+
+            }
+        };
+
+        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
+        app.info.getUpdatedList().observe(this, lengthObserver);
 
 
 
@@ -77,6 +102,7 @@ public class MainScreen extends ActivityAncestor {
             // the selected fragment
             // by using there id.
             Fragment selectedFragment = null;
+            if(app.info.noteList.isEmpty()) return true;
             switch (item.getItemId()) {
                 case R.id.map:
                     if(lastPressed == LIST) {

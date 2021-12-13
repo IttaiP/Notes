@@ -51,7 +51,6 @@ public class Login extends ActivityAncestor {
             }
         }
 
-
         email = findViewById(R.id.welcome_screen_EmailAddress_field);
         password = findViewById(R.id.welcome_screen_password_field);
         auth = FirebaseAuth.getInstance();

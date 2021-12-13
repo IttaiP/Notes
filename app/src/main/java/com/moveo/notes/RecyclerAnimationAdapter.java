@@ -26,12 +26,7 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
 
         this.context = context;
         if(noteList.size()>1)
-        noteList.sort(new Comparator<Note>() {
-            @Override
-            public int compare(Note note, Note t1) {
-                return note.date.compareTo(t1.date);
-            }
-        });
+        noteList.sort((note, t1) -> note.date.compareTo(t1.date));
         this.list = noteList;
 
     }

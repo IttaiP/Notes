@@ -62,7 +62,6 @@ public class MainScreen extends ActivityAncestor {
 
         Intent newNoteIntent = new Intent(this, NewNote.class);
         newNote.setOnClickListener(view -> {
-            app.info.LogOut();
             startActivity(newNoteIntent);
             finish();
         });

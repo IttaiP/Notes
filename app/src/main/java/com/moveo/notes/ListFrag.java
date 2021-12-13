@@ -43,8 +43,7 @@ public class ListFrag extends Fragment {
         bi = DataBindingUtil.inflate(
                 inflater, R.layout.list_fragment, container, false);
         View view = bi.getRoot();
-        //here data must be an instance of the class MarsDataProvider
-//        bi.setMarsdata(this);
+
         return view;
 
     }

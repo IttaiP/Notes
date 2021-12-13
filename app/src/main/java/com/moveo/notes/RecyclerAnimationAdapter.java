@@ -39,6 +39,8 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
 
         holder.name.setText(list.get(i).title);
+        holder.description.setText(list.get(i).body);
+
 //        Picasso.get().load(list.get(i).image).into(holder.imageView);
 
     }
@@ -52,6 +54,7 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
 
         CircleImageView imageView;
         TextView name;
+        TextView description;
         View parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -59,6 +62,8 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
 
             imageView = itemView.findViewById(R.id.image);
             name = itemView.findViewById(R.id.name);
+            description = itemView.findViewById(R.id.desc);
+
             parentLayout = itemView.findViewById(R.id.parentLayout);
         }
     }

@@ -69,6 +69,12 @@ public class NewNote extends ActivityAncestor {
             Note newNote = new Note("___", title.getText().toString(), body.getText().toString(),
                     currentTimestamp[0],null);// todo: add location
             app.info.addNoteToDB(newNote);
+            app.info.noteList.add(newNote);
+            startActivity(new Intent(NewNote.this, MainScreen.class));
+            finish();
+        });
+
+        delete.setOnClickListener(view -> {
             startActivity(new Intent(this, MainScreen.class));
             finish();
         });

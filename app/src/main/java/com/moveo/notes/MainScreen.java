@@ -27,7 +27,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.moveo.notes.databinding.ActivityMainBinding;
@@ -64,10 +67,14 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
         options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
                 .compassEnabled(false)
                 .rotateGesturesEnabled(false)
-                .tiltGesturesEnabled(false);
+                .tiltGesturesEnabled(false)
+                .camera(new CameraPosition.Builder()
+                        .target(new LatLng(app.gps.getLatitude(), app.gps.getLongitude()))      // Sets the center of the map to location user
+                        .zoom(3)                   // Sets the zoom
+                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                        .build() );
         mapFragment = SupportMapFragment.newInstance(options);
         mapFragment.getMapAsync(this);
-
 
 
         Log.e("EMPTY", String.valueOf(app.info.noteList.isEmpty()));
@@ -90,8 +97,25 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
 
         };
 
-        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
+        // listen for gps update
         app.info.getUpdatedList().observe(this, lengthObserver);
+
+        final Observer<Boolean> locationObserver = newUpdatedLocation -> {
+            options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
+                    .compassEnabled(false)
+                    .rotateGesturesEnabled(false)
+                    .tiltGesturesEnabled(false)
+                    .camera(new CameraPosition.Builder()
+                            .target(new LatLng(app.gps.getLatitude(), app.gps.getLongitude()))      // Sets the center of the map to location user
+                            .zoom(9)                   // Sets the zoom
+                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                            .build() );
+            mapFragment = SupportMapFragment.newInstance(options);
+            mapFragment.getMapAsync(this);
+        };
+
+        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
+        app.info.getLocationUpdate().observe(this, locationObserver);
 
 
 
@@ -111,11 +135,21 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        googleMap.setOnMarkerClickListener(marker -> {
+            Note note = (Note) marker.getTag();
+            Intent intent = new Intent(this, NewNote.class);
+            intent.putExtra("id", note.id);
+            intent.putExtra("index",app.info.noteList.indexOf(note));
+            startActivity(intent);
+            this.finish();
+            return false;
+        });
         for (Note note:app.info.noteList) {
-            Log.e("place", String.valueOf(note.latitude)+"___"+String.valueOf(note.latitude));
-            googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(note.latitude, note.longitude))
+            Marker newMarker = googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(note.getLatitude(), note.getLongitude()))
                     .title(note.title));
+            newMarker.setTag(note);
+
         }
 
     }
@@ -161,12 +195,6 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
                     break;
 
             }
-            // It will help to replace the
-            // one fragment to other.
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.fragment_container, selectedFragment)
-//                    .commit();
             return true;
         }
 

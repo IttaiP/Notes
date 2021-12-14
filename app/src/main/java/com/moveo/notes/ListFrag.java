@@ -28,17 +28,8 @@ public class ListFrag extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-//
-//        bi = DataBindingUtil.inflate(
-//                inflater, R.layout.list_fragment, container, false);
-//        View view = bi.getRoot();
-//
-//        return view;
-
         view =  inflater.inflate(R.layout.list_fragment, container, false);
         return view;
-
-
     }
 
     @Override
@@ -59,7 +50,7 @@ public class ListFrag extends Fragment {
                     intent.putExtra("id", item.id);
                     intent.putExtra("index",app.info.noteList.indexOf(item));
                     startActivity(intent);
-                    getActivity().finish(); // todo: check if works
+                    getActivity().finish();
 
                 });
         androidx.recyclerview.widget.RecyclerView recyclerView = view.findViewById(R.id.myList);

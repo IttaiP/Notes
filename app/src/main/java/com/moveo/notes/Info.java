@@ -30,6 +30,8 @@ public class Info {
     List<Note> noteList;
     Context appContext;
     private MutableLiveData<Integer> listLength;
+    private MutableLiveData<Boolean> locationUpdate;
+
 
 
     public Info(Context context) {
@@ -50,6 +52,13 @@ public class Info {
             listLength = new MutableLiveData<Integer>();
         }
         return listLength;
+    }
+
+    public MutableLiveData<Boolean> getLocationUpdate() {
+        if (locationUpdate == null) {
+            locationUpdate = new MutableLiveData<Boolean>();
+        }
+        return locationUpdate;
     }
 
     public void loadNotesFromFirestore(){
@@ -101,7 +110,7 @@ public class Info {
     public void LogOut(){
         sp.edit().remove("logged_in").apply();
         this.noteList.clear();
-        this.getUpdatedList().setValue(0);
+//        this.getUpdatedList().setValue(0);//
     }
 
     public String getLoggedIn(){
@@ -175,11 +184,13 @@ public class Info {
     public void loadUserFromPaper(){
         this.currentUser = Paper.book().read("current user", null);
         noteList = Paper.book().read("note list", new ArrayList<>());
+
         this.getUpdatedList().setValue(noteList.size());
     }
 
     public void saveUserToPaper(){
         Paper.book().write("current user", this.currentUser);
+
     }
 
     public void saveNoteListToPaper(){

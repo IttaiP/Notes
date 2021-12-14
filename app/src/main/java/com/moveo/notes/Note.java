@@ -10,15 +10,17 @@ public class Note {
     public String title;
     public String body;
     public int image;
-    public double latitude;
-    public double longitude;
+    private double latitude;
+    private double longitude;
     public Timestamp date;
+    public GeoPoint location;
 
     public Note(String id, String title, String body, Timestamp date, GeoPoint location){
         this.id = id;
         this.title = title;
         this.body = body;
         this.date = date;
+        this.location = location;
         if(location!= null){
             this.latitude = location.getLatitude();
             this.longitude = location.getLongitude();
@@ -55,5 +57,19 @@ public class Note {
         this.id = id;
     }
 
+    public double getLatitude(){
+        return this.latitude;
+    }
 
+    public double getLongitude(){
+        return this.longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }

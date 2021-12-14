@@ -65,6 +65,7 @@ public class GPSScanner {
                 if (listAddresses != null && listAddresses.size() > 0) {
                     latitude = listAddresses.get(0).getLatitude();
                     longitude = listAddresses.get(0).getLongitude();
+                    app.info.getLocationUpdate().setValue(app.info.getLocationUpdate().getValue());
                 }
 
             } catch (IOException e) {

@@ -16,7 +16,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnimationAdapter.ViewHolder> {
+public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
 
     Context context;
@@ -35,18 +35,19 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_list, null);
 
-        return new ViewHolder(view);
+        return new RecyclerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int i) {
 
-        holder.name.setText(notesList.get(i).title);
-        holder.description.setText(notesList.get(i).body);
-        holder.bind(notesList.get(i), listener);
+        Note note = notesList.get(i);
+        holder.name.setText(note.title);
+        holder.description.setText(note.body);
+        holder.bind(note, listener);
 
 //        Picasso.get().load(list.get(i).image).into(holder.imageView);
 
@@ -72,20 +73,14 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerAnima
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.image);
             name = itemView.findViewById(R.id.name);
             description = itemView.findViewById(R.id.desc);
-
             parentLayout = itemView.findViewById(R.id.parentLayout);
         }
 
         public void bind(final Note item, final OnItemClickListener listener){
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    listener.onItemClick(item);
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
     }
 }

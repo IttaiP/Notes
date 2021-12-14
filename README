@@ -1,1 +1,2 @@
 when editing a note, the old date was kept unless the user manually changed it.
+To many readings from firestore, making things slow. should read everything relevent all at once.

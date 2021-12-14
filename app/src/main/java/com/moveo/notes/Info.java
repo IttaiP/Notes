@@ -42,6 +42,7 @@ public class Info {
         this.currentUser = user;
         this.currentUser.SetID(id);
         loadNotesFromFirestore();
+        saveUserToPaper();
     }
 
     public MutableLiveData<Integer> getUpdatedList() {
@@ -65,11 +66,12 @@ public class Info {
                             Note newNote = new Note(document.getId(), document.getString("title"), document.getString("body"), document.getTimestamp("date"), document.getGeoPoint("location"));
                             noteList.add(newNote);
                             getUpdatedList().setValue(noteList.size());
-
                             Log.d("ID IS ", document.getId());
                             Log.d("TITLE IS ", document.getString("title"));
 
                         }
+                        saveNoteListToPaper();
+
 //                        Gson gson = new Gson();
 //                        String ratingsAsJson = gson.toJson(info.ratings);
 //                        Paper.book(info.getUserEmail()).write("ratings", info.ratings);
@@ -107,7 +109,7 @@ public class Info {
     }
 
     public void addNoteToDB(Note newNote){
-        String id = db.collection("collection_name").document().getId();
+        String id = db.collection("users").document(this.currentUser.id).collection("notes").document().getId();
         newNote.setId(id);
         db.collection("users").document(this.currentUser.id).collection("notes").document(id)
                 .set(newNote)
@@ -167,6 +169,21 @@ public class Info {
                         Toast.makeText(appContext, "Error deleting note", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+
+    public void loadUserFromPaper(){
+        this.currentUser = Paper.book().read("current user", null);
+        noteList = Paper.book().read("note list", new ArrayList<>());
+        this.getUpdatedList().setValue(noteList.size());
+    }
+
+    public void saveUserToPaper(){
+        Paper.book().write("current user", this.currentUser);
+    }
+
+    public void saveNoteListToPaper(){
+        Paper.book().write("note list", noteList);
     }
 
 

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,11 +36,12 @@ public class Login extends ActivityAncestor {
     private EditText email, password;
     private Button signInButton, signInWithGoogleButton;
     private TextView register;
+    private NotesApp app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        app = (NotesApp) getApplication();
         centerTitle();
 
         // check if user already logged in
@@ -47,9 +49,16 @@ public class Login extends ActivityAncestor {
         if(!loggedIn.equals("")){
             String password = app.info.sp.getString("password", "__");
             if(!password.equals("__")){
-                findUserInFirestore(loggedIn, app.info.sp.getString("password", "__"));
+                app.info.loadUserFromPaper();
+                startActivity(new Intent(this, MainScreen.class));
+                finish();
             }
+            return;
         }
+        else{
+            setContentView(R.layout.activity_main);
+        }
+
 
         email = findViewById(R.id.welcome_screen_EmailAddress_field);
         password = findViewById(R.id.welcome_screen_password_field);
@@ -197,6 +206,7 @@ public class Login extends ActivityAncestor {
 
         }
     }
+
 
     private void findUserInFirestore(String email, String password){
         app.info.db.collection("users")

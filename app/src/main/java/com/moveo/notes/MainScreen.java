@@ -23,21 +23,27 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.moveo.notes.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainScreen extends ActivityAncestor {
+public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
     boolean MAP = true;
     boolean LIST = false;
-    boolean lastPressed = MAP;
+    boolean lastPressed = LIST;
+    boolean onEmpty = false;
     Button logOut, newNote;
 
-
-
-
+    ListFrag listFrag;
+    SupportMapFragment mapFragment;
 
 
 
@@ -49,28 +55,39 @@ public class MainScreen extends ActivityAncestor {
         logOut = findViewById(R.id.logout);
         newNote = findViewById(R.id.new_note);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+        app.gps.search(this);
+
+        listFrag = new ListFrag();
+
+        // map fragment
+        GoogleMapOptions options = new GoogleMapOptions();
+        options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
+                .compassEnabled(false)
+                .rotateGesturesEnabled(false)
+                .tiltGesturesEnabled(false);
+        mapFragment = SupportMapFragment.newInstance(options);
+        mapFragment.getMapAsync(this);
+
+
 
         Log.e("EMPTY", String.valueOf(app.info.noteList.isEmpty()));
         if(!app.info.noteList.isEmpty()){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
         }
         else{
+            onEmpty = true;
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NoNotesFragment()).commit();
         }
-
         centerTitle();
 
-        final Observer<Integer> lengthObserver = new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable final Integer newUpdatedListLength) {
-                if(newUpdatedListLength>0){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
-                }
-                else{
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NoNotesFragment()).commit();
-                }
-
+        final Observer<Integer> lengthObserver = newUpdatedListLength -> {
+            if(newUpdatedListLength>0){
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,listFrag ).commit();
             }
+            else{
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NoNotesFragment()).commit();
+            }
+
         };
 
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
@@ -90,6 +107,17 @@ public class MainScreen extends ActivityAncestor {
             startActivity(newNoteIntent);
             finish();
         });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        for (Note note:app.info.noteList) {
+            Log.e("place", String.valueOf(note.latitude)+"___"+String.valueOf(note.latitude));
+            googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(note.latitude, note.longitude))
+                    .title(note.title));
+        }
+
     }
 
 
@@ -112,7 +140,7 @@ public class MainScreen extends ActivityAncestor {
                                         R.anim.slide_out_right,
                                         R.anim.slide_in_right,
                                         R.anim.slide_out_left)
-                                .replace(R.id.fragment_container, new MapFrag())
+                                .replace(R.id.fragment_container, mapFragment)
                                 .commit();
                         lastPressed = MAP;
                     }
@@ -126,7 +154,7 @@ public class MainScreen extends ActivityAncestor {
                                         R.anim.slide_out_left,
                                         R.anim.slide_in_left,
                                         R.anim.slide_out_right)
-                                .replace(R.id.fragment_container, new ListFrag())
+                                .replace(R.id.fragment_container, listFrag)
                                 .commit();
                         lastPressed = LIST;
                     }

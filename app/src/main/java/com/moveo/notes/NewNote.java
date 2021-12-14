@@ -17,6 +17,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -25,11 +26,13 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class NewNote extends ActivityAncestor {
+    NotesApp app;
+
     Button save,delete;
     EditText title, body;
     TextView date;
     Calendar currentDate = Calendar.getInstance();
-//    Date currentDate = new Date();
+
     final Timestamp[] currentTimestamp = {new Timestamp(new Date())};
 
     int index;
@@ -39,6 +42,7 @@ public class NewNote extends ActivityAncestor {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_note);
+        app = (NotesApp) getApplication();
 
         Intent intent = getIntent();
         String id;
@@ -96,9 +100,11 @@ public class NewNote extends ActivityAncestor {
         save.setOnClickListener(view -> {
             if(id.equals("___")) {
                 Note newNote = new Note(id, title.getText().toString(), body.getText().toString(),
-                        currentTimestamp[0], null);// todo: add location
+                        currentTimestamp[0], new GeoPoint(app.gps.getLatitude(), app.gps.getLongitude()));// todo: add location
                 app.info.addNoteToDB(newNote);
                 app.info.noteList.add(newNote);
+                app.info.saveUserToPaper();
+                app.info.saveNoteListToPaper();
                 startActivity(new Intent(NewNote.this, MainScreen.class));
                 finish();
             }
@@ -108,6 +114,8 @@ public class NewNote extends ActivityAncestor {
                 app.info.noteList.get(index).body = body.getText().toString();
                 app.info.noteList.get(index).date = currentTimestamp[0];
                 app.info.updateNoteInDB(app.info.noteList.get(index));
+                app.info.saveUserToPaper();
+                app.info.saveNoteListToPaper();
                 startActivity(new Intent(NewNote.this, MainScreen.class));
                 finish();
 

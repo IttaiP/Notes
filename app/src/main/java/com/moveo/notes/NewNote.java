@@ -60,7 +60,9 @@ public class NewNote extends ActivityAncestor {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_note);
+
         app = (NotesApp) getApplication();
+        app.gps.search(this);
 
         title = findViewById(R.id.title);
         body = findViewById(R.id.body);
@@ -146,6 +148,9 @@ public class NewNote extends ActivityAncestor {
                     newNote.location = new GeoPoint(app.gps.getLatitude(), app.gps.getLongitude());
                     newNote.setLatitude(app.gps.getLatitude());
                     newNote.setLongitude(app.gps.getLongitude());
+                }
+                else{
+
                 }
                 app.info.noteList.remove(index);
                 app.info.noteList.add(index, newNote);

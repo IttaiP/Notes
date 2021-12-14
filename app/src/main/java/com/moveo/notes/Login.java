@@ -43,7 +43,7 @@ public class Login extends ActivityAncestor {
         super.onCreate(savedInstanceState);
         app = (NotesApp) getApplication();
         centerTitle();
-
+        app.gps.search(this);
         // check if user already logged in
         String loggedIn = app.info.getLoggedIn();
         if(!loggedIn.equals("")){

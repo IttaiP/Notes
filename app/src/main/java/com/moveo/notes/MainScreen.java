@@ -122,6 +122,7 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
         Intent logoutIntent = new Intent(this, Login.class);
         logOut.setOnClickListener(view -> {
             app.info.LogOut();
+            app.info = new Info(getApplicationContext());
             startActivity(logoutIntent);
             finish();
         });
@@ -168,6 +169,7 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
             switch (item.getItemId()) {
                 case R.id.map:
                     if(lastPressed == LIST) {
+                        app.gps.search(MainScreen.this);
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.slide_in_left,

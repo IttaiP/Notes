@@ -1,23 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/pencil"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".NoNotesFragment">
+
+
 
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No notes yet..."
         android:fontFamily="@font/bitter"
+        android:text="No notes yet..."
         android:textSize="32sp"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/explanation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="80dp"
+        android:fontFamily="@font/the_girl_next_door"
+        android:text="Add one here!"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:translationZ="3dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="100dp"
+        android:layout_height="118dp"
+        android:layout_marginEnd="188dp"
+        android:layout_marginBottom="632dp"
+        android:rotation="-114"
+        android:src="@drawable/arrow"
+        android:translationZ="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:srcCompat="@drawable/arrow" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="124dp"
+        android:translationZ="1dp"
+
+        android:src="@drawable/fui_idp_button_background_google"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="282dp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

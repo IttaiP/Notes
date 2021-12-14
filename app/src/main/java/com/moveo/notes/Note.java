@@ -1,15 +1,16 @@
 package com.moveo.notes;
 
+import android.media.Image;
+import android.net.Uri;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
-
-import java.util.Date;
 
 public class Note {
     public String id;
     public String title;
     public String body;
-    public int image;
+    public Uri image;
     private double latitude;
     private double longitude;
     public Timestamp date;
@@ -25,15 +26,30 @@ public class Note {
             this.latitude = location.getLatitude();
             this.longitude = location.getLongitude();
         }
-
-
     }
 
-    public int getImage() {
+    public Note(Uri image){
+        this.image = image;
+    }
+
+    public Note(Note note){
+        this.id = note.id;
+        this.title = note.title;
+        this.body = note.body;
+        this.date = note.date;
+        this.location = note.location;
+        if(location!= null){
+            this.latitude = note.location.getLatitude();
+            this.longitude = note.location.getLongitude();
+        }
+        this.image = note.image;
+    }
+
+    public Uri getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(Uri image) {
         this.image = image;
     }
 

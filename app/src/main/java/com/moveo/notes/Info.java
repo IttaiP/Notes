@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,9 @@ import io.paperdb.Paper;
 public class Info {
     SharedPreferences sp;
     public User currentUser;
-    FirebaseFirestore db;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
     List<Note> noteList;
     Context appContext;
     private MutableLiveData<Integer> listLength;
@@ -36,7 +39,6 @@ public class Info {
 
     public Info(Context context) {
         appContext = context;
-        db = FirebaseFirestore.getInstance();
         sp = PreferenceManager.getDefaultSharedPreferences(appContext);
     }
 

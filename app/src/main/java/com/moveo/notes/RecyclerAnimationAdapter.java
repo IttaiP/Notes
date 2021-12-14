@@ -47,9 +47,11 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerViewH
         Note note = notesList.get(i);
         holder.name.setText(note.title);
         holder.description.setText(note.body);
+//        Picasso.get().load(note.image).into(holder.imageView);
+
+
         holder.bind(note, listener);
 
-//        Picasso.get().load(list.get(i).image).into(holder.imageView);
 
     }
 

@@ -1,9 +1,14 @@
 package com.moveo.notes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,27 +18,38 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
+import java.util.UUID;
 
 public class NewNote extends ActivityAncestor {
+    private static final int IMAGE_PICK_CODE = 1000;
+    private static final int PERMISSION_CODE = 1001;
+
     NotesApp app;
 
-    Button save,delete;
+    Button save, delete, image;
     EditText title, body;
     TextView date;
     Calendar currentDate = Calendar.getInstance();
     CheckBox updateLocation;
+    Note newNote = null;
 
     final Timestamp[] currentTimestamp = {new Timestamp(new Date())};
 
@@ -51,6 +67,7 @@ public class NewNote extends ActivityAncestor {
         date = findViewById(R.id.date);
         save = findViewById(R.id.save);
         delete = findViewById(R.id.delete);
+        image = findViewById(R.id.image);
         updateLocation = findViewById(R.id.update_location);
 
         save.setEnabled(false);
@@ -68,6 +85,9 @@ public class NewNote extends ActivityAncestor {
         if(!id.equals("___")){
             readNoteFromFirestore(id);
             index = intent.getExtras().getInt("index");
+            newNote = app.info.noteList.get(index);
+//            readNoteFromStorage();
+
         }
 
 
@@ -107,8 +127,9 @@ public class NewNote extends ActivityAncestor {
 
         save.setOnClickListener(view -> {
             if(id.equals("___")) {
-                Note newNote = new Note(id, title.getText().toString(), body.getText().toString(),
+                Note tempNote = new Note(id, title.getText().toString(), body.getText().toString(),
                         currentTimestamp[0], new GeoPoint(app.gps.getLatitude(), app.gps.getLongitude()));// todo: add location
+                newNote = new Note(tempNote);
                 app.info.addNoteToDB(newNote);
                 app.info.noteList.add(newNote);
                 app.info.saveUserToPaper();
@@ -118,15 +139,17 @@ public class NewNote extends ActivityAncestor {
             }
             else{
                 // todo: update with new location
-                app.info.noteList.get(index).title = title.getText().toString();
-                app.info.noteList.get(index).body = body.getText().toString();
-                app.info.noteList.get(index).date = currentTimestamp[0];
+                newNote.title = title.getText().toString();
+                newNote.body = body.getText().toString();
+                newNote.date = currentTimestamp[0];
 
                 if(updateLocation.isChecked()){
-                    app.info.noteList.get(index).location = new GeoPoint(app.gps.getLatitude(), app.gps.getLongitude());
-                    app.info.noteList.get(index).setLatitude(app.gps.getLatitude());
-                    app.info.noteList.get(index).setLongitude(app.gps.getLongitude());
+                    newNote.location = new GeoPoint(app.gps.getLatitude(), app.gps.getLongitude());
+                    newNote.setLatitude(app.gps.getLatitude());
+                    newNote.setLongitude(app.gps.getLongitude());
                 }
+                app.info.noteList.remove(index);
+                app.info.noteList.add(index, newNote);
 
 
 
@@ -177,6 +200,30 @@ public class NewNote extends ActivityAncestor {
             }
         });
 
+        image.setOnClickListener(view -> {
+            // check runtime permission
+            if (this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                // permission not granted, request it.
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                // show popup
+                requestPermissions(permissions, PERMISSION_CODE);
+            } else {
+                // permission already granted
+                pickImageFromGallery();
+            }
+        });
+
+    }
+
+    private void readNoteFromStorage(){
+       ;
+        title.setText(newNote.title);
+        body.setText(newNote.body);
+        currentTimestamp[0] = newNote.date;
+        Date oldDate = currentTimestamp[0].toDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(oldDate);
+        date.setText("Date: "+calendar.get(Calendar.DAY_OF_MONTH)+"."+(currentDate.get(Calendar.MONTH)+1)+"           to change, press here.");
 
     }
 
@@ -196,7 +243,7 @@ public class NewNote extends ActivityAncestor {
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(oldDate);
                         date.setText("Date: "+calendar.get(Calendar.DAY_OF_MONTH)+"."+(currentDate.get(Calendar.MONTH)+1)+"           to change, press here.");
-
+//                        image =
 //                        Gson gson = new Gson();
 //                        String ratingsAsJson = gson.toJson(info.ratings);
 //                        Paper.book(info.getUserEmail()).write("ratings", info.ratings);
@@ -209,4 +256,54 @@ public class NewNote extends ActivityAncestor {
                     }
                 });
     }
+
+
+
+    private void pickImageFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, IMAGE_PICK_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // permission was granted
+                    pickImageFromGallery();
+                }
+                else {
+                    Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+            Uri imageUri = data.getData();
+            StorageReference storageReference = app.info.firebaseStorage.getReference();
+            String ts = String.valueOf(System.currentTimeMillis() / 1000);
+            StorageReference photoRef = storageReference.child(title.getText().toString()+UUID.randomUUID().toString());
+            photoRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.e("SUCCESS UPLOADING", "photo");
+                    photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Log.e("The uri is ", uri.toString());
+                            newNote.setImage(uri);
+                        }
+                    });
+                }
+            });
+
+        }
+    }
+
+
 }

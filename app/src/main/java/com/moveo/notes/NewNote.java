@@ -83,11 +83,10 @@ public class NewNote extends ActivityAncestor {
             updateLocation.setVisibility(View.GONE);
         }
         if(!id.equals("___")){
-            readNoteFromFirestore(id);
+//            readNoteFromFirestore(id);
             index = intent.getExtras().getInt("index");
             newNote = app.info.noteList.get(index);
-//            readNoteFromStorage();
-
+            readNoteFromStorage();
         }
 
 
@@ -167,7 +166,10 @@ public class NewNote extends ActivityAncestor {
                 Note tempNote = app.info.noteList.get(index);
                 app.info.noteList.remove(index);
                 app.info.deleteNoteFromDB(tempNote);
+                app.info.saveNoteListToPaper();
+                app.info.saveNoteListToPaper();
             }
+
             startActivity(new Intent(this, MainScreen.class));
             finish();
         });

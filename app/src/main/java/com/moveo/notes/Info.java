@@ -74,6 +74,7 @@ public class Info {
 
                         for (DocumentSnapshot document : task.getResult().getDocuments()) {
                             Note newNote = new Note(document.getId(), document.getString("title"), document.getString("body"), document.getTimestamp("date"), document.getGeoPoint("location"));
+                            newNote.setImage(document.getString("image"));
                             noteList.add(newNote);
                             getUpdatedList().setValue(noteList.size());
 

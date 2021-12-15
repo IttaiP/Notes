@@ -264,7 +264,7 @@ public class NewNote extends ActivityAncestor {
 //                        Paper.book(info.getUserEmail()).write("iRatings", info.indicesInRatings);
 //                        info.sp.edit().putString("iRatings", iRatingsAsJson).apply();
                     } else {
-                        Log.e("ERRRORRR", "Error getting documents: ", task.getException());
+                        Log.e("ERRROR", "Error getting documents: ", task.getException());
                     }
                 });
     }
@@ -272,7 +272,6 @@ public class NewNote extends ActivityAncestor {
 
 
     private void pickImageFromGallery() {
-        Log.e("Picking image", "!!!!");
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, IMAGE_PICK_CODE);

@@ -45,13 +45,6 @@ public class Register extends ActivityAncestor {
         centerTitle();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-            Log.e("currentUser", "null");
-
-        }
-        else{
-            Log.e("currentUser", "not_null");
-        }
 
         // Todo: Check if user is signed in (non-null) and update UI accordingly.
 
@@ -70,8 +63,6 @@ public class Register extends ActivityAncestor {
     // ==================================== REGISTER WITH GOOGLE ===================================
     private void createRequest() {
         // Configure Google Sign In
-        Log.e("64", "!!!!!!!");
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("22011293528-l4mpfjoig2elfss0irohmee5h175vl3n.apps.googleusercontent.com")
                 .requestEmail()
@@ -83,17 +74,12 @@ public class Register extends ActivityAncestor {
 
     private void signIn() {
         mGoogleSignInClient.signOut();
-
-        Log.e("76", "!!!!!!!");
-
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("82", "!!!!!!!");
-
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
@@ -102,37 +88,28 @@ public class Register extends ActivityAncestor {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.d("95", "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                Log.e("Google sign in: ", "SIGN IN failed", e);
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        Log.e("105", "!!!!!!!");
-
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.e("112", "!!!!!!!");
-
                         writeNewUserToFirestoreDatabase(WITH_GOOGLE);
 
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.e("118", "!!!!!!!");
-
                         Exception exception = task.getException();
                         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-        Log.e("125", "!!!!!!!");
 
     }
 
@@ -140,7 +117,6 @@ public class Register extends ActivityAncestor {
     private void registerUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
-
 
         if (email.isEmpty()){
             editTextEmail.setError("Email is required!");
@@ -179,7 +155,6 @@ public class Register extends ActivityAncestor {
 
     // ==================================== SHARED ===================================
     private void writeNewUserToFirestoreDatabase(boolean withGoogle) {
-        Log.e("156", String.valueOf(withGoogle));
         User user = null;
         if (withGoogle){
             FirebaseUser googleUser = FirebaseAuth.getInstance().getCurrentUser();

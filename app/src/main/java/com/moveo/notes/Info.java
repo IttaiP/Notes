@@ -73,12 +73,9 @@ public class Info {
                     if (task.isSuccessful()) {
 
                         for (DocumentSnapshot document : task.getResult().getDocuments()) {
-                            Log.e("DOCUMENTTT", document.getId() + " => " + document.getData());
                             Note newNote = new Note(document.getId(), document.getString("title"), document.getString("body"), document.getTimestamp("date"), document.getGeoPoint("location"));
                             noteList.add(newNote);
                             getUpdatedList().setValue(noteList.size());
-                            Log.d("ID IS ", document.getId());
-                            Log.d("TITLE IS ", document.getString("title"));
 
                         }
                         saveNoteListToPaper();
@@ -91,7 +88,7 @@ public class Info {
 //                        Paper.book(info.getUserEmail()).write("iRatings", info.indicesInRatings);
 //                        info.sp.edit().putString("iRatings", iRatingsAsJson).apply();
                     } else {
-                        Log.e("ERRRORRR", "Error getting documents: ", task.getException());
+                        Log.e("ERRROR", "Error getting documents: ", task.getException());
                     }
                 });
     }
@@ -127,7 +124,7 @@ public class Info {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("WRITE SUCCES", "DocumentSnapshot successfully written!");
+                        Log.d("WRITE SUCCESS", "DocumentSnapshot successfully written!");
                         getUpdatedList().setValue(noteList.size());
                     }
                 })

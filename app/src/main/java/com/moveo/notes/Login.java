@@ -228,18 +228,15 @@ public class Login extends ActivityAncestor {
 //                        app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
                         Intent intent = new Intent(this, MainScreen.class);
                         List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
-                        else {
-                            // todo: add extra stuff before going to main page
                             app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
                             app.info.RemmemberLogIn(email);
 
                             startActivity(intent);
                             finish();
-                        }
                     }
 
                     //user was not found
-                
+
                 });
 
     }

@@ -60,10 +60,7 @@ public class GPSScanner {
         locationManager = (LocationManager)
                 app.getSystemService(Context.LOCATION_SERVICE);
         locationListener = location -> {
-            Log.e("geocoder", "before");
-
             Geocoder geocoder = new Geocoder(app, Locale.getDefault());
-            Log.e("geocoder", geocoder.toString());
             try {
                 List<Address> listAddresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 

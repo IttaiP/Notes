@@ -25,7 +25,8 @@ public class NotesApp extends Application {
         info = new Info(this);
         gps = new GPSScanner(this);
 
-//        info.sp.edit().clear().commit();
+        // call to clear sp
+        // info.sp.edit().clear().commit();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

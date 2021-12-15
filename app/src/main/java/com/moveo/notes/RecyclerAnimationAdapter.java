@@ -27,8 +27,8 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerViewH
     public RecyclerAnimationAdapter(Context context, List<Note> noteList, OnItemClickListener listener) {
         this.listener = listener;
         this.context = context;
-        if(noteList.size()>1)
-        noteList.sort((note, t1) -> note.date.compareTo(t1.date));
+        if (noteList.size() > 1)
+            noteList.sort(Comparator.comparing(note -> note.date));
         this.notesList = noteList;
 
     }
@@ -47,13 +47,11 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerViewH
         Note note = notesList.get(i);
         holder.name.setText(note.title);
         holder.description.setText(note.body);
-        if(note.image!= null){
+        if (note.image != null) {
             Glide.with(context).load(note.image).into(holder.imageView);
         }
         holder.bind(note, listener);
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -64,23 +62,4 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerViewH
         void onItemClick(Note item);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-
-        CircleImageView imageView;
-        TextView name;
-        TextView description;
-        View parentLayout;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.image);
-            name = itemView.findViewById(R.id.name);
-            description = itemView.findViewById(R.id.desc);
-            parentLayout = itemView.findViewById(R.id.parentLayout);
-        }
-
-        public void bind(final Note item, final OnItemClickListener listener){
-            itemView.setOnClickListener(v -> listener.onItemClick(item));
-        }
-    }
 }

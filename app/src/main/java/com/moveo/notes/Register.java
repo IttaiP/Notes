@@ -1,13 +1,10 @@
 package com.moveo.notes;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,7 +19,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class Register extends ActivityAncestor {
@@ -35,7 +31,6 @@ public class Register extends ActivityAncestor {
     private final static boolean WITH_GOOGLE = true;
     private final static boolean WITHOUT_GOOGLE = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +42,6 @@ public class Register extends ActivityAncestor {
         signUpWithGoogleButton = findViewById(R.id.google_signIn);
         createRequest();
         signUpWithGoogleButton.setOnClickListener(view -> signIn());
-
         registerButton = findViewById(R.id.create_user_register_button);
         registerButton.setOnClickListener(view -> registerUser());
         editTextEmail = findViewById(R.id.create_user_email_address_field);
@@ -98,7 +92,6 @@ public class Register extends ActivityAncestor {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         writeNewUserToFirestoreDatabase(WITH_GOOGLE);
-
                     } else {
                         // If sign in fails, display a message to the user.
                         Exception exception = task.getException();
@@ -113,25 +106,25 @@ public class Register extends ActivityAncestor {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             editTextEmail.setError("Email is required!");
             editTextEmail.requestFocus();
             return;
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Please provide valid email!");
             editTextEmail.requestFocus();
             return;
         }
 
-        if (password.isEmpty()){
+        if (password.isEmpty()) {
             editTextPassword.setError("Password is required!");
             editTextPassword.requestFocus();
             return;
         }
 
-        if (password.length() < 6){
+        if (password.length() < 6) {
             editTextPassword.setError("Min password length should be 6 characters!");
             editTextPassword.requestFocus();
             return;
@@ -140,31 +133,30 @@ public class Register extends ActivityAncestor {
         registerButton.setEnabled(false);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         writeNewUserToFirestoreDatabase(WITHOUT_GOOGLE);
                     } else {
                         Exception exception = task.getException();
                         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }});
+                    }
+                });
     }
 
     // ==================================== SHARED ===================================
     private void writeNewUserToFirestoreDatabase(boolean withGoogle) {
         User user = null;
-        if (withGoogle){
+        if (withGoogle) {
             FirebaseUser googleUser = FirebaseAuth.getInstance().getCurrentUser();
             if (googleUser != null) {
                 String userEmail = googleUser.getEmail();
                 user = new User(userEmail, "");
 
             }
-        }
-
-        else if (!withGoogle){
+        } else if (!withGoogle) {
             user = new User(editTextEmail.getText().toString().trim(), editTextPassword.getText().toString().trim());
         }
 //        user.SetID(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        app.info.setUser(user,FirebaseAuth.getInstance().getCurrentUser().getUid() );  // wont be null because in case of new user we called "createUserWithEmailAndPassword"
+        app.info.setUser(user, FirebaseAuth.getInstance().getCurrentUser().getUid());  // wont be null because in case of new user we called "createUserWithEmailAndPassword"
 
 
         app.info.db.collection("users").
@@ -172,7 +164,7 @@ public class Register extends ActivityAncestor {
                 .set(user)
                 .addOnCompleteListener(this, subTask -> {
 
-                    if (subTask.isSuccessful()){
+                    if (subTask.isSuccessful()) {
                         Toast.makeText(this,
                                 "User has been registered successfully!",
                                 Toast.LENGTH_LONG).show();
@@ -184,12 +176,14 @@ public class Register extends ActivityAncestor {
                                     if (subTask1.isSuccessful()) {
                                         Log.d("DELETE CURRENT USER",
                                                 "User account deleted.");
-                                    }});
+                                    }
+                                });
 
                         Toast.makeText(this,
                                 "Failed to register! Try again...",
                                 Toast.LENGTH_LONG).show();
-                    }});
+                    }
+                });
         Intent intent = new Intent(this, MainScreen.class); //
         app.info.RemmemberLogIn(user.email);
 
@@ -197,6 +191,5 @@ public class Register extends ActivityAncestor {
         finish();
     }
     // =============================================================================================
-
 
 }

@@ -77,6 +77,7 @@ public class NewNote extends ActivityAncestor {
             save.setEnabled(true);
             index = intent.getExtras().getInt("index");
             newNote = app.info.noteList.get(index);
+            currentDate.setTime(newNote.date.toDate() );
             readNoteFromStorage();
         }
 
@@ -91,6 +92,7 @@ public class NewNote extends ActivityAncestor {
                 Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 calendar.setTimeInMillis(selection);
                 date.setText("Date: " + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "         to change, press here.");
+                currentTimestamp[0] = new Timestamp(new Date(calendar.getTimeInMillis()));
             });
         });
 

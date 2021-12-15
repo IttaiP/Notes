@@ -37,7 +37,6 @@ public class RecyclerAnimationAdapter extends RecyclerView.Adapter<RecyclerViewH
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_list, null);
-
         return new RecyclerViewHolder(view);
     }
 

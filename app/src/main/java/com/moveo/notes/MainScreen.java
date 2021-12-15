@@ -130,7 +130,7 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
         Intent newNoteIntent = new Intent(this, NewNote.class);
         newNote.setOnClickListener(view -> {
             startActivity(newNoteIntent);
-            finish();
+//            finish();
         });
     }
 
@@ -142,7 +142,7 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
             intent.putExtra("id", note.id);
             intent.putExtra("index",app.info.noteList.indexOf(note));
             startActivity(intent);
-            this.finish();
+//            this.finish();
             return false;
         });
         for (Note note:app.info.noteList) {

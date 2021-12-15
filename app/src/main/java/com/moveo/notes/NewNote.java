@@ -73,6 +73,8 @@ public class NewNote extends ActivityAncestor {
         updateLocation = findViewById(R.id.update_location);
 
         save.setEnabled(false);
+        final boolean[] titleSet = {false};
+        final boolean[] bodySet = {false};
 
         Intent intent = getIntent();
         String id;
@@ -84,16 +86,19 @@ public class NewNote extends ActivityAncestor {
             id = "___";
             updateLocation.setVisibility(View.GONE);
         }
+
         if(!id.equals("___")){
 //            readNoteFromFirestore(id);
+            titleSet[0] = true;
+            bodySet[0] = true;
+            save.setEnabled(true);
             index = intent.getExtras().getInt("index");
             newNote = app.info.noteList.get(index);
             readNoteFromStorage();
         }
 
 
-        final boolean[] titleSet = {false};
-        final boolean[] bodySet = {false};
+
 
         Log.e("Month", String.valueOf(currentDate.get(Calendar.MONTH)));
         Log.e("FULL DATE", String.valueOf(currentDate.get(Calendar.DATE)));

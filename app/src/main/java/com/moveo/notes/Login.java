@@ -209,6 +209,8 @@ public class Login extends ActivityAncestor {
 
 
     private void findUserInFirestore(String email, String password){
+        signInWithGoogleButton.setEnabled(false);
+        signInButton.setEnabled(false);
         app.info.db.collection("users")
                 .whereEqualTo("email", email)
                 .whereEqualTo("password", password).get()

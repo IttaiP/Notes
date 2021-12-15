@@ -50,7 +50,7 @@ public class ListFrag extends Fragment {
                     intent.putExtra("id", item.id);
                     intent.putExtra("index",app.info.noteList.indexOf(item));
                     startActivity(intent);
-                    getActivity().finish();
+//                    getActivity().finish();
 
                 });
         androidx.recyclerview.widget.RecyclerView recyclerView = view.findViewById(R.id.myList);

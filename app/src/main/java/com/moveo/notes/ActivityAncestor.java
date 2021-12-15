@@ -19,27 +19,24 @@ public class ActivityAncestor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ancestor);
         app = (NotesApp) getApplication();
-
     }
 
     protected void centerTitle() {
         ArrayList<View> textViews = new ArrayList<>();
-
         getWindow().getDecorView().findViewsWithText(textViews, getTitle(), View.FIND_VIEWS_WITH_TEXT);
-
-        if(textViews.size() > 0) {
+        if (textViews.size() > 0) {
             AppCompatTextView appCompatTextView = null;
-            if(textViews.size() == 1) {
+            if (textViews.size() == 1) {
                 appCompatTextView = (AppCompatTextView) textViews.get(0);
             } else {
-                for(View v : textViews) {
-                    if(v.getParent() instanceof Toolbar) {
+                for (View v : textViews) {
+                    if (v.getParent() instanceof Toolbar) {
                         appCompatTextView = (AppCompatTextView) v;
                         break;
                     }
                 }
             }
-            if(appCompatTextView != null) {
+            if (appCompatTextView != null) {
                 ViewGroup.LayoutParams params = appCompatTextView.getLayoutParams();
                 params.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 appCompatTextView.setLayoutParams(params);

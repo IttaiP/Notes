@@ -1,44 +1,24 @@
 package com.moveo.notes;
 
 
-import static android.app.Activity.RESULT_OK;
-
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Looper;
-import android.util.Log;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class GPSScanner {
     LocationManager locationManager;
@@ -46,7 +26,6 @@ public class GPSScanner {
     NotesApp app;
     final Looper looper = null;
     public Criteria criteria;
-
     Double latitude = 0.0, longitude = 0.0;
 
 
@@ -54,7 +33,6 @@ public class GPSScanner {
         this.app = app;
         initGPS();
     }
-
 
     public void initGPS() {
         locationManager = (LocationManager)
@@ -69,11 +47,9 @@ public class GPSScanner {
                     longitude = listAddresses.get(0).getLongitude();
                     app.info.getLocationUpdate().setValue(app.info.getLocationUpdate().getValue());
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         };
 
         criteria = new Criteria();
@@ -87,25 +63,18 @@ public class GPSScanner {
 
 
     }
-
     public void search(FragmentActivity activity) {
-
         if (ContextCompat.checkSelfPermission(app, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             if (ContextCompat.checkSelfPermission(app, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
             } else {
                 locationManager.requestSingleUpdate(criteria, locationListener, looper);
             }
-
         } else {
             locationManager.requestSingleUpdate(criteria, locationListener, looper);
         }
     }
-
 
 
     public Double getLatitude() {

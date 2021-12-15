@@ -37,6 +37,7 @@ public class Login extends ActivityAncestor {
     private Button signInButton, signInWithGoogleButton;
     private TextView register;
     private NotesApp app;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,6 +210,12 @@ public class Login extends ActivityAncestor {
 
 
     private void findUserInFirestore(String email, String password){
+//        FirebaseUser user = mAuth.getCurrentUser();
+//        if (user != null) {
+//            // do your stuff
+//        } else {
+//            signInAnonymously();
+//        }
         signInWithGoogleButton.setEnabled(false);
         signInButton.setEnabled(false);
         app.info.db.collection("users")
@@ -221,22 +228,18 @@ public class Login extends ActivityAncestor {
 //                        app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
                         Intent intent = new Intent(this, MainScreen.class);
                         List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
-                        if (documentSnapshotList.isEmpty()){
-                            Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
-                        }
                         else {
                             // todo: add extra stuff before going to main page
                             app.info.setUser(new User(email, password), task.getResult().getDocuments().get(0).getId());
                             app.info.RemmemberLogIn(email);
+
                             startActivity(intent);
                             finish();
                         }
                     }
 
                     //user was not found
-                    else {
-                        Toast.makeText(this, "User was not found.", Toast.LENGTH_SHORT).show();
-                    }
+                
                 });
 
     }

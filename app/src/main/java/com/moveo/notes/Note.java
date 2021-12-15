@@ -10,7 +10,7 @@ public class Note {
     public String id;
     public String title;
     public String body;
-    public Uri image;
+    public String image;
     private double latitude;
     private double longitude;
     public Timestamp date;
@@ -28,9 +28,13 @@ public class Note {
         }
     }
 
-    public Note(Uri image){
+    public Note(String image){
         this.image = image;
     }
+
+    public Note(){
+    }
+
 
     public Note(Note note){
         this.id = note.id;
@@ -45,11 +49,11 @@ public class Note {
         this.image = note.image;
     }
 
-    public Uri getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Uri image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

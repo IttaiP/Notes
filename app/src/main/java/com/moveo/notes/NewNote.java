@@ -85,6 +85,8 @@ public class NewNote extends ActivityAncestor {
         else{
             id = "___";
             updateLocation.setVisibility(View.GONE);
+            newNote = new Note();
+
         }
 
         if(!id.equals("___")){
@@ -135,6 +137,7 @@ public class NewNote extends ActivityAncestor {
             if(id.equals("___")) {
                 Note tempNote = new Note(id, title.getText().toString(), body.getText().toString(),
                         currentTimestamp[0], new GeoPoint(app.gps.getLatitude(), app.gps.getLongitude()));// todo: add location
+                tempNote.image = newNote.getImage();
                 newNote = new Note(tempNote);
                 app.info.addNoteToDB(newNote);
                 app.info.noteList.add(newNote);
@@ -159,9 +162,6 @@ public class NewNote extends ActivityAncestor {
                 }
                 app.info.noteList.remove(index);
                 app.info.noteList.add(index, newNote);
-
-
-
                 app.info.updateNoteInDB(app.info.noteList.get(index));
                 app.info.saveUserToPaper();
                 app.info.saveNoteListToPaper();
@@ -272,6 +272,7 @@ public class NewNote extends ActivityAncestor {
 
 
     private void pickImageFromGallery() {
+        Log.e("Picking image", "!!!!");
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, IMAGE_PICK_CODE);
@@ -295,23 +296,31 @@ public class NewNote extends ActivityAncestor {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        save.setEnabled(false);
+        save.setText("uploading image..");
+
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             Uri imageUri = data.getData();
             StorageReference storageReference = app.info.firebaseStorage.getReference();
             String ts = String.valueOf(System.currentTimeMillis() / 1000);
             StorageReference photoRef = storageReference.child(title.getText().toString()+UUID.randomUUID().toString());
-            photoRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.e("SUCCESS UPLOADING", "photo");
-                    photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Log.e("The uri is ", uri.toString());
-                            newNote.setImage(uri);
+            photoRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                Log.e("SUCCESS UPLOADING", "photo");
+                photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.e("The uri is ", uri.toString());
+                        save.setEnabled(true);
+                        save.setText("save");
+                        newNote.setImage(uri.toString());
+                        if(newNote.id!=null&& !newNote.id.equals("___")){
+                            app.info.updateNoteInDB(newNote);
+                            app.info.saveUserToPaper();
+                            app.info.saveNoteListToPaper();
                         }
-                    });
-                }
+
+                    }
+                });
             });
 
         }

@@ -12,6 +12,7 @@
 
 
     <application
+        android:usesCleartextTraffic="true"
         android:name=".NotesApp"
         android:allowBackup="true"
         android:hardwareAccelerated="true"

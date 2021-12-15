@@ -32,7 +32,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.moveo.notes.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -54,6 +62,12 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+
+        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+            FirebaseAuth.getInstance().signInAnonymously();
+        }
+
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         logOut = findViewById(R.id.logout);
         newNote = findViewById(R.id.new_note);

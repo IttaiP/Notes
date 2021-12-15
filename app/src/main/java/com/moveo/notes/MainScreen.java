@@ -62,7 +62,7 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
 
 
         if (!app.info.noteList.isEmpty()) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFrag()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
         } else {
             onEmpty = true;
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NoNotesFragment()).commit();

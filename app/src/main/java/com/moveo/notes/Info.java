@@ -4,19 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
@@ -80,26 +73,10 @@ public class Info {
 
                         }
                         saveNoteListToPaper();
-
-//                        Gson gson = new Gson();
-//                        String ratingsAsJson = gson.toJson(info.ratings);
-//                        Paper.book(info.getUserEmail()).write("ratings", info.ratings);
-//                        info.sp.edit().putString("ratings", ratingsAsJson).apply();
-//                        String iRatingsAsJson = gson.toJson(info.indicesInRatings);
-//                        Paper.book(info.getUserEmail()).write("iRatings", info.indicesInRatings);
-//                        info.sp.edit().putString("iRatings", iRatingsAsJson).apply();
                     } else {
                         Log.e("ERRROR", "Error getting documents: ", task.getException());
                     }
                 });
-    }
-
-    public void StoreEmail(String email){
-        // todo: add email to paper.
-    }
-
-    public void StorePassword(String password){
-        // todo: add password to sp with email as key.
     }
 
     public void RemmemberLogIn(String email){
@@ -110,7 +87,6 @@ public class Info {
     public void LogOut(){
         sp.edit().remove("logged_in").apply();
         this.noteList.clear();
-//        this.getUpdatedList().setValue(0);//
     }
 
     public String getLoggedIn(){
@@ -122,20 +98,11 @@ public class Info {
         newNote.setId(id);
         db.collection("users").document(this.currentUser.id).collection("notes").document(id)
                 .set(newNote)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("WRITE SUCCESS", "DocumentSnapshot successfully written!");
-                        getUpdatedList().setValue(noteList.size());
-                    }
+                .addOnSuccessListener(unused -> {
+                    Log.d("WRITE SUCCESS", "DocumentSnapshot successfully written!");
+                    getUpdatedList().setValue(noteList.size());
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("WRITE FAILURE", "Error writing document", e);
-
-                    }
-                });
+                .addOnFailureListener(e -> Log.w("WRITE FAILURE", "Error writing document", e));
     }
 
     public void updateNoteInDB(Note noteToUpdate){
@@ -143,20 +110,8 @@ public class Info {
         db.collection("users").document(this.currentUser.id)
                 .collection("notes").document(id)
                 .set(noteToUpdate)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("WRITE SUCCES", "DocumentSnapshot successfully written!");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("WRITE FAILURE", "Error writing document", e);
-
-                    }
-                });
+                .addOnSuccessListener(unused -> Log.d("WRITE SUCCES", "DocumentSnapshot successfully written!"))
+                .addOnFailureListener(e -> Log.w("WRITE FAILURE", "Error writing document", e));
     }
 
     public void deleteNoteFromDB(Note noteToDelete){
@@ -164,22 +119,13 @@ public class Info {
         db.collection("users").document(this.currentUser.id)
         .collection("notes").document(id)
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(appContext, "Note was deleted", Toast.LENGTH_SHORT).show();
-                        getUpdatedList().setValue(noteList.size());
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(appContext, "Note was deleted", Toast.LENGTH_SHORT).show();
+                    getUpdatedList().setValue(noteList.size());
 
-                    }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(appContext, "Error deleting note", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e -> Toast.makeText(appContext, "Error deleting note", Toast.LENGTH_SHORT).show());
     }
-
 
     public void loadUserFromPaper(){
         this.currentUser = Paper.book().read("current user", null);
@@ -190,12 +136,9 @@ public class Info {
 
     public void saveUserToPaper(){
         Paper.book().write("current user", this.currentUser);
-
     }
 
     public void saveNoteListToPaper(){
         Paper.book().write("note list", noteList);
     }
-
-
 }

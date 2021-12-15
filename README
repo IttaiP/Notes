@@ -1,17 +1,22 @@
-I created a user with some notes already uploaded with images in different locations (incase you don't wan't to go to different locations yourself :) ) 
+I created a user with some notes uploaded with images and different locations so you don't have fiddle around with the locations. 
 email: example@example.com
 password: 123456
 
+I used firestore as a remote database (to allow access through different phones, like the example above), and PaperDB and SharedPrefferences as a local databases.
+I used the local databases to speed things up and minimilize reads from firestore. When a user stays logged in, he doesn't read from Firestore.
+
 On the opening screen a User can attempt to log in with an email and password or just by email through google.
 The same applies to a new user registering (registering by google opens an option to chose emails saved on the device).
+all that is through firebase authentication.
 
-
-I used a recycler view on the main screen for the list of notes.
+I used a recycler view on the main screen for the list of notes. they are sorted by upload date (oldest at the top).
 Once the user writes a note, a fragment container can change between map mode and list mode.
+
+The user must write a title and body to a note in order to save it.
 
 when editing a note, the old date was kept unless the user manually changed it. The location was kept unless the user marked the checkbox (invisible in the case of a new note)
 
 The app requests permission to location to add locations to notes and when the user tries to upload a picture it also requires permission.
 
-I implemented the bonus of adding images. If the internet connection isn't good it can take time to upload and download images (doesnt
-cause bugs because the save button isn't pressable while uploading.).
+I implemented the bonus of adding images through firebase storage and saved the uri's in firestore. If the internet connection isn't good it can take time to upload and download images (doesnt
+cause bugs because the save button isn't pressable while uploading).

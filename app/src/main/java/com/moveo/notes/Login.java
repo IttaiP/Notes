@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
@@ -126,6 +127,9 @@ public class Login extends ActivityAncestor {
                         app.info.RemmemberLogIn(email);
                         startActivity(intent);
                         finish();
+                    }
+                    else{
+                        Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

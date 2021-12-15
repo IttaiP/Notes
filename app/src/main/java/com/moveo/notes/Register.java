@@ -44,11 +44,6 @@ public class Register extends ActivityAncestor {
         FirebaseAuth.getInstance().signOut();
         centerTitle();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        // Todo: Check if user is signed in (non-null) and update UI accordingly.
-
-
         signUpWithGoogleButton = findViewById(R.id.google_signIn);
         createRequest();
         signUpWithGoogleButton.setOnClickListener(view -> signIn());
@@ -125,7 +120,7 @@ public class Register extends ActivityAncestor {
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            editTextEmail.setError("Please provied valid email!");
+            editTextEmail.setError("Please provide valid email!");
             editTextEmail.requestFocus();
             return;
         }

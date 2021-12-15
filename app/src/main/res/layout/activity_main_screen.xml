@@ -71,22 +71,7 @@
             android:layout_height="match_parent"
             android:layout_above="@id/bottom_navigation"
             android:layout_below="@id/notes2_photo">
-
-
         </FrameLayout>
-
-
-        <!--        <FrameLayout-->
-<!--            android:id="@+id/buttons_frame"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:layout_below="@id/notes2_photo"-->
-<!--            android:layout_marginTop="4dp"-->
-<!--            android:background="@color/bronze">-->
-
-
-<!--        </FrameLayout>-->
-
         <ImageView
             android:id="@+id/notes2_photo"
             android:layout_width="match_parent"
@@ -120,7 +105,6 @@
         android:layout_height="wrap_content"
         android:text="New Note"
         android:layout_marginTop="-16sp"
-
         app:layout_constraintTop_toBottomOf="@+id/textView1"
         app:layout_constraintEnd_toEndOf="@+id/textView1" />
 

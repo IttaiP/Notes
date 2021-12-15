@@ -67,6 +67,15 @@ public class MainScreen extends ActivityAncestor implements OnMapReadyCallback {
             FirebaseAuth.getInstance().signInAnonymously();
         }
 
+        TextView tv1 = findViewById(R.id.textView1);
+        TextView tv2 = findViewById(R.id.textView2);
+        tv1.setAlpha(0);
+        tv2.setAlpha(0);
+        tv1.animate().alpha(1).setDuration(2000).setStartDelay(1000).start();
+        tv2.animate().alpha(1).setDuration(2000).setStartDelay(3000).start();
+
+
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         logOut = findViewById(R.id.logout);

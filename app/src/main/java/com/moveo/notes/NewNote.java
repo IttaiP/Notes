@@ -226,18 +226,15 @@ public class NewNote extends ActivityAncestor {
             StorageReference photoRef = storageReference.child(title.getText().toString() + UUID.randomUUID().toString());
             photoRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
                 Log.e("SUCCESS UPLOADING", "photo");
-                photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.e("The uri is ", uri.toString());
-                        save.setEnabled(true);
-                        save.setText("save");
-                        newNote.setImage(uri.toString());
-                        if (newNote.id != null && !newNote.id.equals("___")) {
-                            app.info.updateNoteInDB(newNote);
-                            app.info.saveUserToPaper();
-                            app.info.saveNoteListToPaper();
-                        }
+                photoRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    Log.e("The uri is ", uri.toString());
+                    save.setEnabled(true);
+                    save.setText("save");
+                    newNote.setImage(uri.toString());
+                    if (newNote.id != null && !newNote.id.equals("___")) {
+                        app.info.updateNoteInDB(newNote);
+                        app.info.saveUserToPaper();
+                        app.info.saveNoteListToPaper();
                     }
                 });
             });

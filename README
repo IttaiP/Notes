@@ -1,2 +1,17 @@
-when editing a note, the old date was kept unless the user manually changed it.
-To many readings from firestore, making things slow. should read everything relevent all at once.
+I created a user with some notes already uploaded with images in different locations (incase you don't wan't to go to different locations yourself :) ) 
+email: example@example.com
+password: 123456
+
+On the opening screen a User can attempt to log in with an email and password or just by email through google.
+The same applies to a new user registering (registering by google opens an option to chose emails saved on the device).
+
+
+I used a recycler view on the main screen for the list of notes.
+Once the user writes a note, a fragment container can change between map mode and list mode.
+
+when editing a note, the old date was kept unless the user manually changed it. The location was kept unless the user marked the checkbox (invisible in the case of a new note)
+
+The app requests permission to location to add locations to notes and when the user tries to upload a picture it also requires permission.
+
+I implemented the bonus of adding images. If the internet connection isn't good it can take time to upload and download images (doesnt
+cause bugs because the save button isn't pressable while uploading.).
